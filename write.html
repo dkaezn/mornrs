@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ 
+  <title>Mornrs | Дурсамж бичих</title>
+  <link rel="stylesheet" href="styles.css"/>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body class="write-page">
+
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <img src="icony.png" alt="Mornrs logo"/>
+    <span>MoRnrs</span>
+  </a>
+
+  <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+
+  <nav class="site-nav">
+    <ul>
+      <li><a href="index.html">Нүүр</a></li>
+      <li><a href="blog.html">Дурсамжууд</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+
+  <section>
+    <h1>Дурсамж бичих</h1>
+    <p class="section-lead">Гэрэл зураг, түүх, огноогоо оруулж хуваалцаарай.</p>
+  </section>
+
+  <section class="memory-form-section">
+    <form id="memoryForm" class="memory-form">
+      <div class="form-group">
+        <label for="title">Гарчиг:</label>
+        <input type="text" id="title" name="title" required placeholder="Дурсамжийн гарчиг">
+      </div>
+
+      <div class="form-group">
+        <label for="content">Дурсамж:</label>
+        <textarea id="content" name="content" rows="5" required placeholder="Таны дурсамж..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="date">Огноо:</label>
+        <input type="date" id="date" name="date" required>
+      </div>
+
+      <div class="form-group">
+        <label for="author">Нэр:</label>
+        <input type="text" id="author" name="author" required placeholder="Таны нэр">
+      </div>
+
+      <!-- In the form section, replace the URL field with file input -->
+<div class="form-group">
+  <label for="image">Зураг оруулах:</label>
+  <input type="file" id="imageUpload" name="image" accept="image/*" capture="environment">
+  <small class="form-text">Зураг сонгох</small>
+</div>
+
+<!-- Image preview -->
+<div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
+  <img id="imagePreview" class="image-preview" alt="Preview">
+  <button type="button" class="remove-image" id="removeImage" style="display: none;">×</button>
+</div>
+
+      <button type="submit" class="btn btn-primary">Хадгалах</button>
+      <button type="button" id="cancelBtn" class="btn btn-secondary">Болих</button>
+    </form>
+  
+    <!-- Loading indicator -->
+    <div id="loading" style="display:none; text-align:center; margin-top:20px;">
+      <p>Хадгалж байна...</p>
+    </div>
+  
+    <!-- Message container -->
+    <div id="message" style="display:none; margin-top:20px; padding:10px; border-radius:4px;"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-legal">
+    <p>&copy; <span id="year"></span> Mornrs.</p>
+  </div>
+</footer>
+
+<!-- At the bottom of write.html, just before </body> -->
+
+<!-- ========== SCRIPTS - Same order as blog.html ========== -->
+
+<!-- 1. Firebase Configuration (separate file) -->
+<script src="firebase-config.js"></script>
+
+<!-- 2. Your main script.js (if you have common functions) -->
+<script src="script.js"></script>
+
+<!-- 3. Write page specific script -->
+<script>
+// Get current year for footer
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Set default date to today
+document.addEventListener('DOMContentLoaded', function() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('date').value = today;
+});
+
+// Handle form submission
+document.getElementById('memoryForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  document.getElementById('loading').style.display = 'block';
+  document.querySelector('button[type="submit"]').disabled = true;
+  
+  const memory = {
+    title: document.getElementById('title').value,
+    content: document.getElementById('content').value,
+    date: document.getElementById('date').value,
+    author: document.getElementById('author').value,
+    image: document.getElementById('image').value || null,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  
+  try {
+    const docRef = await db.collection('memories').add(memory);
+    console.log('Document written with ID: ', docRef.id);
+    
+    showMessage('Дурсамж амжилттай хадгалагдлаа!', 'success');
+    
+    setTimeout(() => {
+      window.location.href = 'blog.html';
+    }, 2000);
+    
+  } catch (error) {
+    console.error('Error adding document: ', error);
+    showMessage('Алдаа гарлаа. Дахин оролдоно уу.', 'error');
+    
+    document.getElementById('loading').style.display = 'none';
+    document.querySelector('button[type="submit"]').disabled = false;
+  }
+});
+
+// Handle cancel button
+document.getElementById('cancelBtn').addEventListener('click', function() {
+  if (confirm('Та устгахыг хүсч байна уу?')) {
+    window.location.href = 'blog.html';
+  }
+});
+
+// Helper function to show messages
+function showMessage(text, type) {
+  const messageDiv = document.getElementById('message');
+  messageDiv.style.display = 'block';
+  messageDiv.textContent = text;
+  
+  if (type === 'success') {
+    messageDiv.style.backgroundColor = '#d4edda';
+    messageDiv.style.color = '#155724';
+    messageDiv.style.border = '1px solid #c3e6cb';
+  } else {
+    messageDiv.style.backgroundColor = '#f8d7da';
+    messageDiv.style.color = '#721c24';
+    messageDiv.style.border = '1px solid #f5c6cb';
+  }
+  
+  if (type === 'error') {
+    setTimeout(() => {
+      messageDiv.style.display = 'none';
+    }, 5000);
+  }
+}
+
+// Add this to your write.html script section
+let selectedImageFile = null;
+const imageUpload = document.getElementById('imageUpload');
+const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+const imagePreview = document.getElementById('imagePreview');
+const removeImage = document.getElementById('removeImage');
+
+// Handle file selection
+imageUpload.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    // Check file size (limit to 1MB for Firestore)
+    if (file.size > 1024 * 1024) {
+      showMessage('Зураг хэт том байна. 1MB-с бага зураг сонгоно уу.', 'error');
+      imageUpload.value = '';
+      return;
+    }
+    
+    selectedImageFile = file;
+    
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      imagePreview.src = e.target.result;
+      imagePreviewContainer.style.display = 'block';
+      removeImage.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Remove image
+removeImage.addEventListener('click', function() {
+  selectedImageFile = null;
+  imageUpload.value = '';
+  imagePreviewContainer.style.display = 'none';
+  removeImage.style.display = 'none';
+});
+
+// Update form submission to handle Base64
+document.getElementById('memoryForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  document.getElementById('loading').style.display = 'block';
+  document.querySelector('button[type="submit"]').disabled = true;
+  
+  try {
+    // Create memory data
+    const memoryData = {
+      title: document.getElementById('title').value,
+      content: document.getElementById('content').value,
+      date: document.getElementById('date').value,
+      author: document.getElementById('author').value,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    
+    // If image selected, convert to Base64 and add to memory
+    if (selectedImageFile) {
+      const base64Image = await fileToBase64(selectedImageFile);
+      memoryData.image = base64Image; // Store as Base64 string
+    }
+    
+    // Save to Firebase
+    const docRef = await db.collection('memories').add(memoryData);
+    console.log('Memory saved with ID: ', docRef.id);
+    
+    showMessage('Дурсамж амжилттай хадгалагдлаа!', 'success');
+    
+    setTimeout(() => {
+      window.location.href = 'blog.html';
+    }, 2000);
+    
+  } catch (error) {
+    console.error('Error:', error);
+    showMessage('Алдаа гарлаа. Дахин оролдоно уу.', 'error');
+    
+    document.getElementById('loading').style.display = 'none';
+    document.querySelector('button[type="submit"]').disabled = false;
+  }
+});
+
+// Helper function to convert file to Base64
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+// Mobile menu toggle
+document.querySelector('.menu-toggle').addEventListener('click', function() {
+  const nav = document.querySelector('.site-nav');
+  const expanded = this.getAttribute('aria-expanded') === 'true' ? false : true;
+  this.setAttribute('aria-expanded', expanded);
+  nav.classList.toggle('active');
+});
+</script>
+
+</body>
+</html>

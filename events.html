@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ 
+  <title>Mornrs | Events</title>
+  <meta name="description" content="Training schedule, group runs, and upcoming races."/>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <img src="icony.png" alt="Mornrs logo"/>
+    <span>MoRnrs</span>
+  </a>
+  <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  <nav class="site-nav" aria-label="Main">
+    <ul>
+      <li><a href="index.html">Нүүр</a></li>
+      <li><a href="about.html">Бидний тухай</a></li>
+      <li><a href="events.html" class="active">Арга хэмжээ</a></li>
+      <li><a href="members.html">Гишүүд</a></li>
+      <li><a href="blog.html">Блог</a></li>
+      <li><a href="join.html" class="cta">Нэгдэх</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+  <section>
+    <h1>Арга хэмжээ & бэлтгэл</h1>
+    <p>Бүх гүйлт халаалт болон сунгалтын дасгалтай.</p>
+    <div class="filters" role="tablist" aria-label="Шүүлтүүр">
+      <button class="chip active" data-filter="all" role="tab" aria-selected="true">Бүгд</button>
+      <button class="chip" data-filter="training" role="tab">Бэлтгэл</button>
+      <button class="chip" data-filter="community-runs" role="tab">Нийтийн гүйлт</button>
+      <button class="chip" data-filter="races" role="tab">Үйл ажиллагаа болон марафон</button>
+    </div>
+  </section>
+
+  <section class="event-list">
+    <article class="event" data-type="community-runs" id="community-runs">
+      <h3>Өглөөний гүйлт</h3>
+      <p><strong>Хэзээ:</strong> 1/Feb  08:00 </p>
+      <p><strong>Хаана:</strong> Margitsziget  </p>
+      <p><strong>Төлөвлөгөө:</strong> 5км</p>
+    </article>
+    <article class="event" data-type="community-runs" id="community-runs">
+      <p><strong>Хэзээ:</strong> 7/Feb 08:30</p>
+      <p><strong>Хаана:</strong> Jaszai Mari ter</p>
+      <p><strong>Төлөвлөгөө:</strong> 6км</p>
+    </article>
+      
+     <article class="event" data-type="community-runs" id="community-runs">
+      <h3>Валентин гүйлт</h3>
+      <p><strong>Хэзээ:</strong> 14/Feb 08:30</p>
+      <p><strong>Хаана:</strong> Marcius 15 ter </p>
+      <p><strong>Төлөвлөгөө:</strong>7км</p>
+     </article>
+      
+    <article class="event" data-type="training" id="training">
+      <h3>Interval гүйлт</h3>
+      <p><strong>Хэзээ:</strong> 20/Feb 19:00</p>
+      <p><strong>Хаана:</strong> Varosliget</p>
+      <p><strong>Төлөвлөгөө:</strong>.....</p>
+    </article>
+    <article class="event" data-type="community-runs" id="community-runs">
+      <h3>Хөнгөн гүйлт</h3>
+      <p><strong>Хэзээ:</strong> 22/Feb 08:00</p>
+      <p><strong>Хаана:</strong>Margitsziget </p>
+      <p><strong>Төлөвлөгөө:</strong>5км</p>
+    </article>
+    <article class="event" data-type="training" id="training">
+      <h3>Tempo гүйлт</h3>
+      <p><strong>Хэзээ:</strong> 25/Feb 19:00</p>
+      <p><strong>Хаана:</strong>Varosliget</p>
+      <p><strong>Төлөвлөгөө:</strong>......</p>
+    </article>
+    <article class="event" data-type="races" id="races">
+      <h3>Уулын алхалт</h3>
+      <p><strong>Хэзээ:</strong> ihihi</p>
+      <p><strong>Хаана:</strong> ohoho</p>
+      <p><strong>Цуглах газар:</strong> heheheheh</p>
+    </article>
+    <article class="event" data-type="races">
+      <h3>Vivicitta Half Marathon</h3>
+      <p><strong>Хэзээ:</strong>  21-22 March</p>
+      <p><strong>Зай:</strong> 7км, 10км, 21км</p>
+      <a href="https://springhalfmarathon.runinbudapest.com/" class="btn btn-outline">Бүртгүүлэх</a>
+    </article>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-legal">
+    <p>&copy; <span id="year"></span> Mornrs.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

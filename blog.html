@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Mornrs | Дурсамж</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="styles.css"/>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body class="blog-page">
+
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <img src="icony.png" alt="Mornrs logo"/>
+    <span>MoRnrs</span>
+  </a>
+
+  <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+
+  <nav class="site-nav">
+    <ul>
+      <li><a href="index.html">Нүүр</a></li>
+      <li><a href="about.html">Бидний тухай</a></li>
+      <li><a href="events.html">Арга хэмжээнүүд</a></li>
+      <li><a href="members.html">Гишүүд</a></li>
+      <li><a href="blog.html" class="active">Блог</a></li>
+      <li><a href="join.html" class="cta">Нэгдэх</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+
+  <section>
+    <h1>Дурсамжууд</h1>
+    <p class="section-lead">
+      Манай гишүүдийн аялал, уралдаан, хөгжилтэй мөчүүдийг эндээс үзээрэй.
+    </p>
+  </section>
+
+  <!-- Memories container -->
+  <section class="cards" id="memoriesContainer">
+    <!-- Loading indicator -->
+    <div class="loading-memories">
+      <p>Дурсамжуудыг ачааллаж байна...</p>
+    </div>
+  </section>
+
+  <!-- Add your memory section -->
+  <section style="margin-top:40px; text-align:center;">
+    <h2>Та өөрийн дурсамжаа бидэнтэй хуваалцаарай.</h2>
+   
+
+    <a href="write.html" class="btn btn-primary" style="margin-top:40px; display:inline-block;">
+      Дурсамж бичих
+    </a>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-legal">
+    <p>&copy; <span id="year"></span> Mornrs.</p>
+  </div>
+</footer>
+
+<!-- Modal for full memory view -->
+<div class="modal-overlay" id="memoryModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <button class="modal-close" id="closeModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <img id="modalImage" class="modal-image" style="display: none;" alt="Memory image">
+      <div id="modalContent" class="memory-full-content"></div>
+      <div class="modal-meta">
+        <span id="modalDate" class="date"></span>
+        <span id="modalAuthor" class="author"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SCRIPTS - Order is important! ========== -->
+
+<!-- 1. Firebase Configuration (separate file) -->
+<script src="firebase-config.js"></script>
+
+<!-- 2. Your main script.js (if you have common functions) -->
+<script src="script.js"></script>
+
+<!-- 3. Blog page specific script -->
+<script>
+// Get current year for footer
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Modal elements
+const modal = document.getElementById('memoryModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalContent = document.getElementById('modalContent');
+const modalImage = document.getElementById('modalImage');
+const modalDate = document.getElementById('modalDate');
+const modalAuthor = document.getElementById('modalAuthor');
+const closeModal = document.getElementById('closeModal');
+
+// Close modal when clicking X
+closeModal.addEventListener('click', () => {
+  modal.classList.remove('active');
+});
+
+// Close modal when clicking outside
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.classList.remove('active');
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modal.classList.contains('active')) {
+    modal.classList.remove('active');
+  }
+});
+
+// Function to open modal with memory details
+function openMemoryModal(memory) {
+  console.log('Opening modal with memory:', memory);
+  
+  modalTitle.textContent = memory.title || 'Гарчиггүй';
+  modalContent.textContent = memory.content || 'Агуулга байхгүй';
+  
+  // Format date
+  if (memory.date) {
+    const date = new Date(memory.date);
+    modalDate.textContent = date.toLocaleDateString('mn-MN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } else {
+    modalDate.textContent = 'Огноо тодорхойгүй';
+  }
+  
+  modalAuthor.textContent = memory.author ? `- ${memory.author}` : '- Үл мэдэгдэх';
+  
+  // Handle image
+  if (memory.image && memory.image.trim() !== '') {
+    modalImage.src = memory.image;
+    modalImage.style.display = 'block';
+    modalImage.onerror = () => {
+      modalImage.style.display = 'none';
+    };
+  } else {
+    modalImage.style.display = 'none';
+  }
+  
+  modal.classList.add('active');
+}
+
+// Function to display memories
+async function displayMemories() {
+  const memoriesContainer = document.getElementById('memoriesContainer');
+  
+  try {
+    // Get memories from Firebase
+    const snapshot = await db.collection('memories')
+      .orderBy('date', 'desc')
+      .get();
+    
+    memoriesContainer.innerHTML = '';
+    
+    if (snapshot.empty) {
+      memoriesContainer.innerHTML = `
+        <div class="empty-state">
+          <p>Одоогоор дурсамж байхгүй байна.</p>
+          <p>Та <a href="write.html">энд дарж</a> анхны дурсамжаа бичээрэй!</p>
+        </div>
+      `;
+      return;
+    }
+    
+    const memories = [];
+    
+    snapshot.forEach(doc => {
+      const memory = doc.data();
+      memory.id = doc.id;
+      memories.push(memory);
+      
+      const memoryDate = new Date(memory.date);
+      const formattedDate = memoryDate.toLocaleDateString('mn-MN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      const memoryCard = document.createElement('article');
+      memoryCard.className = 'card';
+      memoryCard.dataset.id = memory.id;
+      
+      // In displayMemories function, handle Base64 image
+let imageHtml = '';
+if (memory.image) {
+  // Check if it's a Base64 string (starts with 'data:image')
+  if (memory.image.startsWith('data:image')) {
+    imageHtml = `<img src="${memory.image}" alt="${memory.title}" class="memory-image">`;
+  } else {
+    // Regular URL
+    imageHtml = `<img src="${memory.image}" alt="${memory.title}" class="memory-image" onerror="this.style.display='none'">`;
+  }
+}
+
+
+      const isLongContent = memory.content && memory.content.length > 150;
+      const shortContent = isLongContent ? memory.content.substring(0, 150) + '...' : (memory.content || 'Агуулга байхгүй');
+      
+      memoryCard.innerHTML = `
+        ${imageHtml}
+        <h3>${memory.title || 'Гарчиггүй'}</h3>
+        <div class="memory-content">
+          ${shortContent}
+        </div>
+        ${isLongContent ? '<button class="see-more-btn">Дэлгэрэнгүй</button>' : ''}
+        <div class="memory-meta">
+          <span class="date">${formattedDate}</span>
+          <span class="author">- ${memory.author || 'Үл мэдэгдэх'}</span>
+        </div>
+      `;
+      
+      memoryCard.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('see-more-btn')) {
+          openMemoryModal(memory);
+        }
+      });
+      
+      memoriesContainer.appendChild(memoryCard);
+    });
+    
+    // Add click events to "Дэлгэрэнгүй" buttons
+    document.querySelectorAll('.see-more-btn').forEach((button) => {
+      button.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        const card = this.closest('.card');
+        const cardIndex = Array.from(document.querySelectorAll('.card')).indexOf(card);
+        
+        if (memories[cardIndex]) {
+          openMemoryModal(memories[cardIndex]);
+        }
+      });
+    });
+    
+  } catch (error) {
+    console.error('Error getting memories: ', error);
+    memoriesContainer.innerHTML = `
+      <div class="error-state">
+        <p>Алдаа гарлаа: ${error.message}</p>
+        <p>Дахин оролдоно уу.</p>
+      </div>
+    `;
+  }
+}
+
+// Load memories when page loads
+document.addEventListener('DOMContentLoaded', displayMemories);
+
+// Mobile menu toggle
+document.querySelector('.menu-toggle').addEventListener('click', function() {
+  const nav = document.querySelector('.site-nav');
+  const expanded = this.getAttribute('aria-expanded') === 'true' ? false : true;
+  this.setAttribute('aria-expanded', expanded);
+  nav.classList.toggle('active');
+});
+</script>
+
+</body>
+</html>
