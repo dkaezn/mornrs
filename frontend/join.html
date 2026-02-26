@@ -1,0 +1,80 @@
+<!-- join.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Mornrs | Join</title>
+  <meta name="description" content="Join Mornrs and start your running journey."/>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="join-page">
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <img src="icony.png" alt="Mornrs logo"/>
+    <span>MoRnrs</span>
+  </a>
+  <button class="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  <nav class="site-nav" aria-label="Main">
+    <ul>
+      <li><a href="index.html">Нүүр</a></li>
+      <li><a href="about.html">Бидний тухай</a></li>
+      <li><a href="events.html" >Арга хэмжээ</a></li>
+      <li><a href="members.html">Гишүүд</a></li>
+      <li><a href="blog.html">Блог</a></li>
+      <li><a href="join.html" class="cta">Нэгдэх</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+  <section>
+    <h1>Нэгдэх</h1>
+    <p class="section-lead">Өөрийн мэдээллээ илгээснээр та манай клубын гишүүн болно.</p>
+  </section>
+
+  <section>
+    <form id="join-form" class="form" novalidate>
+      <div class="form-row">
+        <label for="name">Нэр</label>
+        <input type="text" id="name" name="name" required placeholder="бүтэн нэр"/>
+      </div>
+      <div class="form-row">
+        <label for="email">Имэйл</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com"/>
+      </div>
+      <div class="form-row">
+        <label for="goal">Үндсэн зорилго</label>
+        <select id="goal" name="goal" required>
+          <option value="">Таны зорилго</option>
+          <option>Гүйж эхлэх</option>
+          <option>5K</option>
+          <option>10K</option>
+          <option>Хагас марафон</option>
+          <option>Марафон</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="pace">Дундаж хурд (мин/км)</label>
+        <input type="text" id="pace" name="pace" placeholder="e.g., 5:30"/>
+      </div>
+     
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Илгээх</button>
+        <p class="form-msg" aria-live="polite"></p>
+      </div>
+    </form>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-legal">
+    <p>&copy; <span id="year"></span> Mornrs.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
