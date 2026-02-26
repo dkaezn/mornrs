@@ -45,7 +45,7 @@ if (newsletterForm) {
 
     try {
       // Call your backend server (running on port 3001)
-      const response = await fetch('http://localhost:3001/api/subscribe', {
+      const response = await fetch('https://mornrs-backend.onrender.com/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
