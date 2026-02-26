@@ -117,6 +117,57 @@
   }
 
   // ====================
+  // MEMBERS PAGE - Fetch via Backend
+  // ====================
+  const membersList = document.getElementById('members-list');
+
+  if (membersList) {
+    async function loadMembers() {
+      try {
+        console.log('Fetching members from our backend...');
+        
+        // Call your Render backend instead of Airtable directly
+        const response = await fetch('https://mornrs-backend.onrender.com/api/members');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`);
+        }
+        
+        const records = await response.json();
+        
+        const members = records.map(record => ({
+          name: record.fields.Name || 'Anonymous',
+          goal: record.fields.Goal || '',
+          pace: record.fields.Pace || ''
+        }));
+
+        if (members.length === 0) {
+          membersList.innerHTML = `<li class="member-meta">Одоогоор гишүүн байхгүй байна. Анхных нь болоорой!</li>`;
+        } else {
+          membersList.innerHTML = members
+            .map(
+              (m) => `
+              <li>
+                <span class="member-name">${m.name}</span>
+                <span class="member-meta">
+                  ${m.goal}${m.pace ? ' · ' + m.pace + ' min/km' : ''}
+                </span>
+              </li>`
+            )
+            .join('');
+        }
+      } catch (error) {
+        console.error('Error loading members:', error);
+        membersList.innerHTML = `
+          <li class="member-meta">Гишүүди_г ачаалахад алдаа гарлаа. Дахин ачаална уу.</li>
+        `;
+      }
+    }
+
+    loadMembers();
+  }
+
+  // ====================
   // EVENT FILTERS
   // ====================
   const chips = document.querySelectorAll('.chip');

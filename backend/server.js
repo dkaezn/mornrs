@@ -85,6 +85,32 @@ app.post('/api/join', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
+// --- ROUTE 3: GET MEMBERS (For the Members Page) ---
+app.get('/api/members', async (req, res) => {
+  const token = process.env.AIRTABLE_TOKEN;
+  const baseId = process.env.AIRTABLE_BASE_ID;
+  const tableName = process.env.AIRTABLE_TABLE_NAME;
+
+  try {
+    const response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}?view=Grid%20view`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+    
+    if (response.ok) {
+      // Send the records back to the frontend
+      res.status(200).json(data.records);
+    } else {
+      res.status(response.status).json(data);
+    }
+  } catch (error) {
+    console.error('Airtable Fetch Error:', error);
+    res.status(500).json({ error: 'Failed to fetch members' });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Backend is live on port ${PORT}`);
 });

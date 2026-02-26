@@ -80,133 +80,62 @@
     });
   }
 
-  // ====================
-  // JOIN FORM → Airtable
-  // ====================
-  const joinForm = document.getElementById('join-form');
+ // ====================
+// JOIN FORM → Send to Backend
+// ====================
+const joinForm = document.getElementById('join-form');
 
-  if (joinForm) {
-    const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
-    const goalInput = document.getElementById('goal');
-    const paceInput = document.getElementById('pace');
-    const msg = joinForm.querySelector('.form-msg');
+if (joinForm) {
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+  const goalInput = document.getElementById('goal');
+  const paceInput = document.getElementById('pace');
+  const msg = joinForm.querySelector('.form-msg');
 
-    // YOUR AIRTABLE CREDENTIALS
-    const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN; 
-    const BASE_ID = 'appzBiMt8XX5KcxQO';
-    const TABLE_NAME = 'Members';
+  joinForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    joinForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // 1. Basic Validation
+    if (!nameInput.value.trim() || !emailInput.checkValidity()) {
+      msg.textContent = 'Заавал бөглөх талбаруудыг үнэн зөв бөглөнө үү.';
+      msg.style.color = '#ff4444';
+      return;
+    }
 
-      const valid =
-        nameInput.value.trim() &&
-        emailInput.value.trim() &&
-        emailInput.checkValidity() &&
-        goalInput.value.trim();
+    msg.textContent = 'Илгээж байна...';
+    msg.style.color = '#666';
 
-      if (!valid) {
-        msg.textContent = 'Заавал бөглөх талбаруудыг үнэн зөв бөглөнө үү.';
-        msg.style.color = '#ff4444';
-        return;
-      }
+    try {
+      // 2. Send to YOUR backend (which has the keys)
+      const response = await fetch('https://mornrs-backend.onrender.com/api/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: nameInput.value.trim(),
+          email: emailInput.value.trim(),
+          goal: goalInput.value.trim(),
+          pace: paceInput.value.trim()
+        })
+      });
 
-      const newMember = {
-        fields: {
-          Name: nameInput.value.trim(),
-          Email: emailInput.value.trim(),
-          Goal: goalInput.value.trim(),
-          Pace: paceInput.value.trim() || ''
-        }
-      };
-
-      try {
-        console.log('Sending to Airtable:', {
-          token: AIRTABLE_TOKEN.substring(0, 15) + '...',
-          baseId: BASE_ID,
-          tableName: TABLE_NAME,
-          data: newMember
-        });
-
-        const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(newMember)
-        });
-
-        console.log('Response status:', response.status);
-        
-        // Get the response as text first
-        const responseText = await response.text();
-        console.log('Raw response:', responseText);
-
-        if (response.ok) {
-          // If response is OK, try to parse it (but we don't really need it)
-          try {
-            JSON.parse(responseText);
-          } catch {
-            // Ignore parsing errors for success case
-          }
-          
-          msg.textContent = 'Mornrs клубт нэгдсэнд баярлалаа! Та одоо гишүүдийн жагсаалтад бүртгэгдлээ.';
-          msg.style.color = '#4CAF50';
-          joinForm.reset();
-        } else {
-          // Try to parse error as JSON, but handle non-JSON responses
-          let errorMessage = 'Unknown error';
-          let errorDetails = '';
-          
-          try {
-            const errorData = JSON.parse(responseText);
-            errorMessage = errorData.error?.message || errorData.error || JSON.stringify(errorData);
-            errorDetails = JSON.stringify(errorData, null, 2);
-          } catch {
-            // If not JSON, use the text directly
-            errorMessage = responseText || `HTTP error ${response.status}`;
-          }
-          
-          // Show user-friendly message
-          msg.textContent = `Алдаа: ${errorMessage.substring(0, 100)}${errorMessage.length > 100 ? '...' : ''}`;
-          msg.style.color = '#ff4444';
-          
-          // Log full details to console
-          console.error('=== AIRTABLE ERROR DETAILS ===');
-          console.error('Status:', response.status);
-          console.error('Status Text:', response.statusText);
-          console.error('Error Message:', errorMessage);
-          if (errorDetails) console.error('Full Error:', errorDetails);
-          console.error('==============================');
-          
-          // Specific guidance based on status
-          if (response.status === 401 || response.status === 403) {
-            console.error('🔑 AUTHENTICATION ERROR: Your token is invalid or missing permissions');
-            console.error('   Make sure your token has these scopes:');
-            console.error('   - data.records:read');
-            console.error('   - data.records:write');
-          } else if (response.status === 404) {
-            console.error('🔍 NOT FOUND: Check your BASE_ID and TABLE_NAME');
-            console.error(`   Base ID: ${BASE_ID}`);
-            console.error(`   Table Name: ${TABLE_NAME}`);
-          } else if (response.status === 422) {
-            console.error('📋 VALIDATION ERROR: Check your field names match Airtable');
-            console.error('   Required fields: Name, Email, Goal, Pace');
-          }
-        }
-      } catch (error) {
-        console.error('=== NETWORK/FETCH ERROR ===');
-        console.error('Error:', error);
-        console.error('===========================');
-        
-        msg.textContent = `Алдаа: ${error.message}`;
+      if (response.ok) {
+        msg.textContent = 'Амжилттай! Mornrs клубт нэгдсэнд баярлалаа.';
+        msg.style.color = '#4CAF50';
+        joinForm.reset();
+      } else {
+        const errorData = await response.json();
+        msg.textContent = 'Алдаа: ' + (errorData.message || 'Бүртгэл амжилтгүй');
         msg.style.color = '#ff4444';
       }
-    });
-  }
-
+    } catch (error) {
+      console.error('Network Error:', error);
+      msg.textContent = 'Сервертэй холбогдож чадсангүй. Дахин оролдоно уу.';
+      msg.style.color = '#ff4444';
+    }
+  });
+}
   // ====================
   // MEMBERS PAGE - Fetch from Airtable
   // ====================
