@@ -3,15 +3,17 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-// Debug: Check if API key is loaded (remove after testing)
-console.log('API Key loaded:', process.env.BREVO_API_KEY ? 'YES' : 'NO');
-console.log('API Key starts with:', process.env.BREVO_API_KEY ? process.env.BREVO_API_KEY.substring(0, 10) + '...' : 'Not found');
+
 
 const app = express();
 
 // Update CORS to allow your specific frontend URL
 app.use(cors({
-  origin: ['http://127.0.0.1:5500', 'http://localhost:5500'],
+  origin: ['http://127.0.0.1:5500',
+    'http://localhost:5500',
+    'https://mornrs.com',
+    'https://www.mornrs.com'  
+  ],
   credentials: true,
   methods: ['POST', 'GET', 'OPTIONS']
 }));
