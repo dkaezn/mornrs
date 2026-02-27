@@ -17,11 +17,18 @@ app.use(cors({
 
 app.use(express.json());
 
-// --- ROUTE 1: BREVO (Newsletter) ---
+// --- ROUTE 1: BREVO (Newsletter) - FIXED VERSION ---
 app.post('/api/subscribe', async (req, res) => {
   const { email } = req.body;
+  
+  // Validate email
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+
   try {
-    const response = await fetch('https://api.brevo.com/v3/contacts', {
+    // Step 1: Try to create/update contact
+    const createResponse = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
         'api-key': process.env.BREVO_API_KEY,
@@ -30,16 +37,67 @@ app.post('/api/subscribe', async (req, res) => {
       body: JSON.stringify({
         email: email,
         listIds: [3],
-        updateEnabled: true
+        updateEnabled: true, // This tells Brevo to update if exists
+        emailBlacklisted: false,
+        smsBlacklisted: false
       })
     });
 
-    const data = await response.json();
-    if (response.ok) {
-      res.status(200).json({ success: true });
-    } else {
-      res.status(response.status).json(data);
+    const createData = await createResponse.json();
+    
+    // Step 2: Check if successful
+    if (createResponse.ok) {
+      console.log(`Successfully added/updated ${email} in list 3`);
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Successfully subscribed' 
+      });
     }
+    
+    // Step 3: Handle specific error cases
+    if (createData.code === 'duplicate_parameter') {
+      // Contact exists but wasn't updated properly - try adding to list directly
+      console.log(`Contact ${email} exists, attempting to add to list directly...`);
+      
+      // First, get the contact to find their ID
+      const getResponse = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+        headers: {
+          'api-key': process.env.BREVO_API_KEY
+        }
+      });
+      
+      if (getResponse.ok) {
+        const contactData = await getResponse.json();
+        const contactId = contactData.id || contactData.email;
+        
+        // Add existing contact to list
+        const addToListResponse = await fetch(`https://api.brevo.com/v3/contacts/lists/3/contacts/add`, {
+          method: 'POST',
+          headers: {
+            'api-key': process.env.BREVO_API_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            emails: [email]
+          })
+        });
+        
+        if (addToListResponse.ok) {
+          return res.status(200).json({ 
+            success: true, 
+            message: 'Added to newsletter list' 
+          });
+        }
+      }
+    }
+    
+    // If we get here, something else went wrong
+    console.error('Brevo API error:', createData);
+    res.status(createResponse.status).json({ 
+      error: 'Failed to subscribe', 
+      details: createData 
+    });
+    
   } catch (error) {
     console.error('Brevo Error:', error);
     res.status(500).json({ error: 'Failed to subscribe' });

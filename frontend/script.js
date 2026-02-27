@@ -20,48 +20,64 @@
     yearEl.textContent = new Date().getFullYear();
   }
 
-  // ====================
-  // NEWSLETTER FORM (Brevo via Backend)
-  // ====================
-  const newsletterForm = document.getElementById('newsletter-form');
+ // ====================
+// NEWSLETTER FORM
+// ====================
+const newsletterForm = document.getElementById('newsletter-form');
 
-  if (newsletterForm) {
-    const emailInput = document.getElementById('newsletter-email');
-    const msg = newsletterForm.querySelector('.form-msg');
+if (newsletterForm) {
+  const emailInput = document.getElementById('newsletter-email');
+  const msg = newsletterForm.querySelector('.form-msg');
 
-    newsletterForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  newsletterForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      if (!emailInput.value || !emailInput.checkValidity()) {
-        msg.textContent = 'Зөв имэйл хаяг оруулна уу.';
+    // Validate email
+    if (!emailInput.value || !emailInput.checkValidity()) {
+      msg.textContent = 'Зөв имэйл хаяг оруулна уу.';
+      msg.style.color = '#ff4444';
+      return;
+    }
+
+    // Show "subscribing" message
+    msg.textContent = 'Бүртгэж байна...';
+    msg.style.color = '#666';
+
+    try {
+      console.log('Sending email:', emailInput.value);
+      
+      // FIXED: Changed from '/' to '/api/subscribe'
+      const response = await fetch('https://mornrs-backend.onrender.com/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: emailInput.value
+        })
+      });
+
+      console.log('Response status:', response.status);
+      
+      const data = await response.json();
+      console.log('Response data:', data);
+
+      // Handle successful response
+      if (response.ok) {
+        msg.textContent = 'Амжилттай бүртгэгдлээ!';
+        msg.style.color = '#4CAF50';
+        emailInput.value = ''; // Clear input
+      } else {
+        msg.textContent = data.message || 'Алдаа гарлаа. Дахин оролдоно уу.';
         msg.style.color = '#ff4444';
-        return;
       }
-
-      msg.textContent = 'Бүртгэж байна...';
-      msg.style.color = '#666';
-
-      try {
-        const response = await fetch('https://mornrs-backend.onrender.com/api/subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: emailInput.value })
-        });
-
-        if (response.ok) {
-          msg.textContent = 'Амжилттай бүртгэгдлээ! Mornrs-д тавтай морил.';
-          msg.style.color = '#4CAF50';
-          emailInput.value = '';
-        } else {
-          msg.textContent = 'Бүртгэл амжилтгүй боллоо.';
-          msg.style.color = '#ff4444';
-        }
-      } catch (error) {
-        msg.textContent = 'Сервертэй холбогдоход алдаа гарлаа.';
-        msg.style.color = '#ff4444';
-      }
-    });
-  }
+    } catch (error) {
+      console.error('Full error details:', error);
+      msg.textContent = 'Алдаа гарлаа. Дахин оролдоно уу.';
+      msg.style.color = '#ff4444';
+    }
+  });
+}
 
   // ====================
   // JOIN FORM (Airtable via Backend)
