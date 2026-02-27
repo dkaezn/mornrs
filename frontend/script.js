@@ -19,9 +19,8 @@
   if (yearEl) {
     yearEl.textContent = new Date().getFullYear();
   }
-
- // ====================
-// NEWSLETTER FORM
+// ====================
+// NEWSLETTER FORM - WITH BETTER ERROR HANDLING
 // ====================
 const newsletterForm = document.getElementById('newsletter-form');
 
@@ -39,14 +38,12 @@ if (newsletterForm) {
       return;
     }
 
-    // Show "subscribing" message
     msg.textContent = 'Бүртгэж байна...';
     msg.style.color = '#666';
 
     try {
       console.log('Sending email:', emailInput.value);
       
-      // FIXED: Changed from '/' to '/api/subscribe'
       const response = await fetch('https://mornrs-backend.onrender.com/api/subscribe', {
         method: 'POST',
         headers: {
@@ -59,21 +56,35 @@ if (newsletterForm) {
 
       console.log('Response status:', response.status);
       
-      const data = await response.json();
-      console.log('Response data:', data);
+      // Try to get the response as text first to see what's coming back
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
+      
+      // Try to parse as JSON
+      let data;
+      try {
+        data = JSON.parse(responseText);
+        console.log('Parsed response data:', data);
+      } catch (e) {
+        console.error('Could not parse response as JSON:', responseText);
+        msg.textContent = 'Серверээс буруу хариу ирлээ';
+        msg.style.color = '#ff4444';
+        return;
+      }
 
-      // Handle successful response
       if (response.ok) {
         msg.textContent = 'Амжилттай бүртгэгдлээ!';
         msg.style.color = '#4CAF50';
-        emailInput.value = ''; // Clear input
+        emailInput.value = '';
       } else {
-        msg.textContent = data.message || 'Алдаа гарлаа. Дахин оролдоно уу.';
+        // Show the actual error message from the server
+        msg.textContent = data.error || data.message || 'Алдаа гарлаа. Дахин оролдоно уу.';
         msg.style.color = '#ff4444';
+        console.error('Server error:', data);
       }
     } catch (error) {
-      console.error('Full error details:', error);
-      msg.textContent = 'Алдаа гарлаа. Дахин оролдоно уу.';
+      console.error('Network Error:', error);
+      msg.textContent = 'Сервертэй холбогдож чадсангүй. Дахин оролдоно уу.';
       msg.style.color = '#ff4444';
     }
   });
