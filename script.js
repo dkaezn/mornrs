@@ -48,7 +48,7 @@
       try {
         console.log('Sending email:', emailInput.value); // Debug log
         
-        const response = await fetch('https://mornrs-backend.onrender.com/', {
+        const response = await fetch('https://mornrs-backend.onrender.com/api/subscribe', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
