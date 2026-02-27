@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const app = express();
 
-// Configure CORS for your live domain and local testing
+// Configure CORS
 app.use(cors({
   origin: [
     'http://127.0.0.1:5500',
@@ -24,7 +24,7 @@ app.post('/api/subscribe', async (req, res) => {
     const response = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
-        'api-key': process.env.BREVO_API_KEY, // Uses key from Render Env
+        'api-key': process.env.BREVO_API_KEY,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -50,7 +50,6 @@ app.post('/api/subscribe', async (req, res) => {
 app.post('/api/join', async (req, res) => {
   const { name, email, goal, pace } = req.body;
   
-  // Use the exact names you set in Render Env
   const token = process.env.AIRTABLE_TOKEN;
   const baseId = process.env.AIRTABLE_BASE_ID;
   const tableName = process.env.AIRTABLE_TABLE_NAME;
@@ -84,7 +83,6 @@ app.post('/api/join', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
 // --- ROUTE 3: GET MEMBERS (For the Members Page) ---
 app.get('/api/members', async (req, res) => {
   const token = process.env.AIRTABLE_TOKEN;
@@ -92,7 +90,8 @@ app.get('/api/members', async (req, res) => {
   const tableName = process.env.AIRTABLE_TABLE_NAME;
 
   try {
-    const response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}?view=Grid%20view`, {
+    // Removed the "Grid view" filter to prevent 404/422 errors if view name differs
+    const response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -101,8 +100,8 @@ app.get('/api/members', async (req, res) => {
     const data = await response.json();
     
     if (response.ok) {
-      // Send the records back to the frontend
-      res.status(200).json(data.records);
+      // Return records or empty array if none exist
+      res.status(200).json(data.records || []);
     } else {
       res.status(response.status).json(data);
     }
@@ -111,6 +110,8 @@ app.get('/api/members', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch members' });
   }
 });
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Backend is live on port ${PORT}`);
 });

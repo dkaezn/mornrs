@@ -48,14 +48,12 @@
           body: JSON.stringify({ email: emailInput.value })
         });
 
-        const data = await response.json();
-
         if (response.ok) {
           msg.textContent = 'Амжилттай бүртгэгдлээ! Mornrs-д тавтай морил.';
           msg.style.color = '#4CAF50';
           emailInput.value = '';
         } else {
-          msg.textContent = data.error || 'Бүртгэл амжилтгүй боллоо';
+          msg.textContent = 'Бүртгэл амжилтгүй боллоо.';
           msg.style.color = '#ff4444';
         }
       } catch (error) {
@@ -87,9 +85,9 @@
       }
 
       msg.textContent = 'Илгээж байна...';
+      msg.style.color = '#666';
 
       try {
-        // We now send to our OWN backend, not Airtable directly
         const response = await fetch('https://mornrs-backend.onrender.com/api/join', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -105,6 +103,11 @@
           msg.textContent = 'Mornrs клубт нэгдсэнд баярлалаа!';
           msg.style.color = '#4CAF50';
           joinForm.reset();
+          
+          // Refresh members list automatically after joining
+          if (typeof loadMembers === 'function') {
+            setTimeout(loadMembers, 2000); 
+          }
         } else {
           msg.textContent = 'Алдаа гарлаа. Дахин оролдоно уу.';
           msg.style.color = '#ff4444';
@@ -121,49 +124,44 @@
   // ====================
   const membersList = document.getElementById('members-list');
 
-  if (membersList) {
-    async function loadMembers() {
-      try {
-        console.log('Fetching members from our backend...');
-        
-        // Call your Render backend instead of Airtable directly
-        const response = await fetch('https://mornrs-backend.onrender.com/api/members');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
-        }
-        
-        const records = await response.json();
-        
-        const members = records.map(record => ({
-          name: record.fields.Name || 'Anonymous',
-          goal: record.fields.Goal || '',
-          pace: record.fields.Pace || ''
-        }));
+  async function loadMembers() {
+    if (!membersList) return;
+    
+    try {
+      const response = await fetch('https://mornrs-backend.onrender.com/api/members');
+      
+      if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+      
+      const records = await response.json();
+      
+      // Ensure we match Airtable column names exactly (Case Sensitive)
+      const members = records.map(record => ({
+        name: record.fields.Name || 'Anonymous',
+        goal: record.fields.Goal || '',
+        pace: record.fields.Pace || ''
+      }));
 
-        if (members.length === 0) {
-          membersList.innerHTML = `<li class="member-meta">Одоогоор гишүүн байхгүй байна. Анхных нь болоорой!</li>`;
-        } else {
-          membersList.innerHTML = members
-            .map(
-              (m) => `
-              <li>
-                <span class="member-name">${m.name}</span>
-                <span class="member-meta">
-                  ${m.goal}${m.pace ? ' · ' + m.pace + ' min/km' : ''}
-                </span>
-              </li>`
-            )
-            .join('');
-        }
-      } catch (error) {
-        console.error('Error loading members:', error);
-        membersList.innerHTML = `
-          <li class="member-meta">Гишүүди_г ачаалахад алдаа гарлаа. Дахин ачаална уу.</li>
-        `;
+      if (members.length === 0) {
+        membersList.innerHTML = `<li class="member-meta">Одоогоор гишүүн байхгүй байна.</li>`;
+      } else {
+        membersList.innerHTML = members
+          .map(m => `
+            <li>
+              <span class="member-name">${m.name}</span>
+              <span class="member-meta">
+                ${m.goal}${m.pace ? ' · ' + m.pace + ' min/km' : ''}
+              </span>
+            </li>`)
+          .join('');
       }
+    } catch (error) {
+      console.error('Error loading members:', error);
+      membersList.innerHTML = `<li class="member-meta">Алдаа гарлаа.</li>`;
     }
+  }
 
+  // Load members if the list element exists on the page
+  if (membersList) {
     loadMembers();
   }
 
