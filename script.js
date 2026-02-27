@@ -80,123 +80,145 @@
     });
   }
 
- // ====================
-// JOIN FORM → Send to Backend
-// ====================
-const joinForm = document.getElementById('join-form');
+  // ====================
+  // JOIN FORM → Send to Backend
+  // ====================
+  const joinForm = document.getElementById('join-form');
 
-if (joinForm) {
-  const nameInput = document.getElementById('name');
-  const emailInput = document.getElementById('email');
-  const goalInput = document.getElementById('goal');
-  const paceInput = document.getElementById('pace');
-  const msg = joinForm.querySelector('.form-msg');
+  if (joinForm) {
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const goalInput = document.getElementById('goal');
+    const paceInput = document.getElementById('pace');
+    const msg = joinForm.querySelector('.form-msg');
 
-  joinForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    joinForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    // 1. Basic Validation
-    if (!nameInput.value.trim() || !emailInput.checkValidity()) {
-      msg.textContent = 'Заавал бөглөх талбаруудыг үнэн зөв бөглөнө үү.';
-      msg.style.color = '#ff4444';
-      return;
-    }
+      // 1. Basic Validation
+      if (!nameInput.value.trim() || !emailInput.checkValidity()) {
+        msg.textContent = 'Заавал бөглөх талбаруудыг үнэн зөв бөглөнө үү.';
+        msg.style.color = '#ff4444';
+        return;
+      }
 
-    msg.textContent = 'Илгээж байна...';
-    msg.style.color = '#666';
+      msg.textContent = 'Илгээж байна...';
+      msg.style.color = '#666';
 
-    try {
-      // 2. Send to YOUR backend (which has the keys)
-      const response = await fetch('https://mornrs-backend.onrender.com/api/join', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: nameInput.value.trim(),
-          email: emailInput.value.trim(),
-          goal: goalInput.value.trim(),
-          pace: paceInput.value.trim()
-        })
-      });
+      try {
+        // 2. Send to YOUR backend (which has the keys)
+        const response = await fetch('https://mornrs-backend.onrender.com/api/join', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: nameInput.value.trim(),
+            email: emailInput.value.trim(),
+            goal: goalInput.value.trim(),
+            pace: paceInput.value.trim()
+          })
+        });
 
-      if (response.ok) {
-        msg.textContent = 'Амжилттай! Mornrs клубт нэгдсэнд баярлалаа.';
-        msg.style.color = '#4CAF50';
-        joinForm.reset();
-      } else {
-        const errorData = await response.json();
-        msg.textContent = 'Алдаа: ' + (errorData.message || 'Бүртгэл амжилтгүй');
+        if (response.ok) {
+          msg.textContent = 'Амжилттай! Mornrs клубт нэгдсэнд баярлалаа.';
+          msg.style.color = '#4CAF50';
+          joinForm.reset();
+        } else {
+          const errorData = await response.json();
+          msg.textContent = 'Алдаа: ' + (errorData.message || 'Бүртгэл амжилтгүй');
+          msg.style.color = '#ff4444';
+        }
+      } catch (error) {
+        console.error('Network Error:', error);
+        msg.textContent = 'Сервертэй холбогдож чадсангүй. Дахин оролдоно уу.';
         msg.style.color = '#ff4444';
       }
-    } catch (error) {
-      console.error('Network Error:', error);
-      msg.textContent = 'Сервертэй холбогдож чадсангүй. Дахин оролдоно уу.';
-      msg.style.color = '#ff4444';
-    }
-  });
-}
- // ====================
-// MEMBERS PAGE - Fetch via Backend
-// ====================
-const membersList = document.getElementById('members-list');
-
-if (membersList) {
-  const BACKEND_URL = 'https://mornrs-backend.onrender.com'; // Your Render backend URL
-
-  async function loadMembers() {
-    try {
-      console.log('Fetching members from backend...');
-      
-      const response = await fetch(`${BACKEND_URL}/api/members`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      console.log('Members response status:', response.status);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`HTTP error ${response.status}`);
-      }
-      
-      const members = await response.json();
-      console.log('Members data received:', members);
-      
-      if (!members || members.length === 0) {
-        membersList.innerHTML = `
-          <li class="member-meta">Хараахан гишүүн байхгүй. Та хамгийн түрүүнд нэгдээрэй!</li>
-        `;
-      } else {
-        membersList.innerHTML = members
-          .map(
-            (m) => `
-            <li>
-              <span class="member-name">${m.name || 'Нэргүй'}</span>
-              <span class="member-meta">
-                ${m.goal || 'Зорилгоо оруулаагүй'}${m.pace ? ' · ' + m.pace + ' мин/км' : ''}
-              </span>
-            </li>`
-          )
-          .join('');
-      }
-    } catch (error) {
-      console.error('Error loading members:', error);
-      membersList.innerHTML = `
-        <li class="member-meta">Гишүүдийг татахад алдаа гарлаа. Дахин оролдоно уу.</li>
-      `;
-    }
+    });
   }
 
-  // Load members immediately when page loads
-  loadMembers();
-  
-  // Optional: Refresh members list every 30 seconds
-  // setInterval(loadMembers, 30000);
-}
+  // ====================
+  // MEMBERS PAGE - Fetch via Backend
+  // ====================
+  const membersList = document.getElementById('members-list');
+
+  if (membersList) {
+    const BACKEND_URL = 'https://mornrs-backend.onrender.com';
+
+    async function loadMembers() {
+      try {
+        console.log('Fetching members from backend...');
+        
+        const response = await fetch(`${BACKEND_URL}/api/members`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        console.log('Members response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          throw new Error(`HTTP error ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Raw data from backend:', data);
+        
+        // Check if data is an array or has records property
+        console.log('Data type:', Array.isArray(data) ? 'array' : typeof data);
+        
+        // If it's an array, log the first item structure
+        if (Array.isArray(data) && data.length > 0) {
+          console.log('First member structure:', data[0]);
+          console.log('First member fields:', Object.keys(data[0]));
+        }
+        
+        // Handle the data based on its structure
+        let members = [];
+        
+        if (Array.isArray(data)) {
+          members = data;
+        } else if (data.records && Array.isArray(data.records)) {
+          members = data.records;
+        } else {
+          console.error('Unexpected data structure:', data);
+          members = [];
+        }
+        
+        if (!members.length) {
+          membersList.innerHTML = `
+            <li class="member-meta">Хараахан гишүүн байхгүй. Та хамгийн түрүүнд нэгдээрэй!</li>
+          `;
+        } else {
+          membersList.innerHTML = members
+            .map(m => {
+              // Handle different possible structures
+              const memberData = m.fields || m; // If using Airtable records format
+              
+              return `
+              <li>
+                <span class="member-name">${memberData.Name || memberData.name || 'Нэргүй'}</span>
+                <span class="member-meta">
+                  ${memberData.Goal || memberData.goal || 'Зорилгоо оруулаагүй'}${memberData.Pace || memberData.pace ? ' · ' + (memberData.Pace || memberData.pace) + ' мин/км' : ''}
+                </span>
+              </li>`;
+            })
+            .join('');
+        }
+        
+      } catch (error) {
+        console.error('Error loading members:', error);
+        membersList.innerHTML = `
+          <li class="member-meta">Гишүүдийг татахад алдаа гарлаа. Дахин оролдоно уу.</li>
+        `;
+      }
+    }
+
+    loadMembers();
+  }
 
   // ====================
   // EVENT FILTERS
