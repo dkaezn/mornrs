@@ -136,73 +136,67 @@ if (joinForm) {
     }
   });
 }
-  // ====================
-  // MEMBERS PAGE - Fetch from Airtable
-  // ====================
-  const membersList = document.getElementById('members-list');
+ // ====================
+// MEMBERS PAGE - Fetch via Backend
+// ====================
+const membersList = document.getElementById('members-list');
 
-  if (membersList) {
-    // YOUR AIRTABLE CREDENTIALS
-    const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN; 
-    const BASE_ID = 'appzBiMt8XX5KcxQO';
-    const TABLE_NAME = 'Members';
+if (membersList) {
+  const BACKEND_URL = 'https://mornrs-backend.onrender.com'; // Your Render backend URL
 
-    async function loadMembers() {
-      try {
-        console.log('Fetching members from Airtable...');
-        
-        const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`, {
-          headers: {
-            'Authorization': `Bearer ${AIRTABLE_TOKEN}`
-          }
-        });
-        
-        console.log('Members response status:', response.status);
-        
-        const responseText = await response.text();
-        
-        if (!response.ok) {
-          console.error('Error response:', responseText);
-          throw new Error(`HTTP error ${response.status}`);
+  async function loadMembers() {
+    try {
+      console.log('Fetching members from backend...');
+      
+      const response = await fetch(`${BACKEND_URL}/api/members`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
-        
-        const data = JSON.parse(responseText);
-        console.log('Members data received:', data);
-        
-        const members = data.records.map(record => ({
-          name: record.fields.Name,
-          email: record.fields.Email,
-          goal: record.fields.Goal,
-          pace: record.fields.Pace || ''
-        }));
-
-        if (!members.length) {
-          membersList.innerHTML = `
-            <li class="member-meta">No members yet. Be the first to join!</li>
-          `;
-        } else {
-          membersList.innerHTML = members
-            .map(
-              (m) => `
-              <li>
-                <span class="member-name">${m.name}</span>
-                <span class="member-meta">
-                  ${m.goal}${m.pace ? ' · ' + m.pace + ' min/km' : ''}
-                </span>
-              </li>`
-            )
-            .join('');
-        }
-      } catch (error) {
-        console.error('Error loading members:', error);
-        membersList.innerHTML = `
-          <li class="member-meta">Error loading members. Please refresh.</li>
-        `;
+      });
+      
+      console.log('Members response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`HTTP error ${response.status}`);
       }
+      
+      const members = await response.json();
+      console.log('Members data received:', members);
+      
+      if (!members || members.length === 0) {
+        membersList.innerHTML = `
+          <li class="member-meta">Хараахан гишүүн байхгүй. Та хамгийн түрүүнд нэгдээрэй!</li>
+        `;
+      } else {
+        membersList.innerHTML = members
+          .map(
+            (m) => `
+            <li>
+              <span class="member-name">${m.name || 'Нэргүй'}</span>
+              <span class="member-meta">
+                ${m.goal || 'Зорилгоо оруулаагүй'}${m.pace ? ' · ' + m.pace + ' мин/км' : ''}
+              </span>
+            </li>`
+          )
+          .join('');
+      }
+    } catch (error) {
+      console.error('Error loading members:', error);
+      membersList.innerHTML = `
+        <li class="member-meta">Гишүүдийг татахад алдаа гарлаа. Дахин оролдоно уу.</li>
+      `;
     }
-
-    loadMembers();
   }
+
+  // Load members immediately when page loads
+  loadMembers();
+  
+  // Optional: Refresh members list every 30 seconds
+  // setInterval(loadMembers, 30000);
+}
 
   // ====================
   // EVENT FILTERS
