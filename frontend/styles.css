@@ -1824,58 +1824,11 @@ input[type="file"] {
     outline-width: 2px;
   }
   
-  /* Stats section improvements */
- /* ===== STATS CONTAINER - CENTERED COLUMN ON MOBILE ===== */
-
-  .stats-wrapper {
-    width: 100%;
-    padding: 20px 0;
-    display: flex;
-    justify-content: center;
+  .about-page .stats-wrapper,
+  .about-page .stats-container,
+  .about-page .stats-item {
+    display: none !important;
   }
-  
-  .stats-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    width: 100%;
-    max-width: 280px;
-    margin: 0 auto !;
-  }
-  
-  .stats-item {
-    width: 100%;
-    max-width: 250px;
-    text-align: center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 15px 20px;
-    box-shadow: 0 4px 15px rgba(0, 199, 255, 0.15);
-    margin: 0 auto;
-  }
-  
-  .stats-item h2 {
-    font-size: 2.2rem;
-    margin: 0;
-    color: var(--primary);
-  }
-  
-  .stats-item h3 {
-    font-size: 1.1rem;
-    margin: 8px 0 0;
-    color: var(--muted);
-    font-weight: 500;
-  }
-  
-  .plus-mid {
-    font-size: 0.6em;
-    position: relative;
-    top: -0.15em;
-  }
-}
 
 /* 
   
@@ -2255,3 +2208,4 @@ input[type="file"] {
   }
 }
 
+}
