@@ -2257,10 +2257,9 @@ input[type="file"] {
   display: block !important;
   width: 100% !important;
   padding: 0 !important;
-  margin-top: 30px !important;
-  margin-bottom: 5px !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  margin: 50px 0 0 0 !important;
+  position: relative !important;
+  bottom: -20px !important;  /* Moves entire section down 20px */
   background: transparent !important;
 }
 
