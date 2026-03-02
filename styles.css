@@ -1824,26 +1824,59 @@ input[type="file"] {
     outline-width: 2px;
   }
   
-  /* Stats section improvements */
+  /* ===== STATS CONTAINER - CENTERED COLUMN ON MOBILE ===== */
+
+  .stats-wrapper {
+    width: 100%;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+  
   .stats-container {
-    gap: 20px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 0 10px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    width: 100% !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
   }
   
   .stats-item {
-    min-width: 120px;
-    flex: 1 1 auto;
+    width: 100% !important;
+    max-width: 250px !important;
+    text-align: center !important;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 15px 20px !important;
+    box-shadow: 0 4px 15px rgba(0, 199, 255, 0.15);
+    margin: 0 auto !important;
   }
   
   .stats-item h2 {
-    font-size: 2rem;
+    font-size: 2.2rem !important;
+    margin: 0 !important;
+    color: var(--primary);
   }
   
   .stats-item h3 {
-    font-size: 0.85rem;
+    font-size: 1.1rem !important;
+    margin: 8px 0 0 !important;
+    color: var(--muted);
+    font-weight: 500;
   }
+  
+  .plus-mid {
+    font-size: 0.6em;
+    position: relative;
+    top: -0.15em;
+  }
+
+
+
   
   /* About page hero improvements */
   .about-page .hero-background {
@@ -2221,77 +2254,3 @@ input[type="file"] {
   }
 }
 
-/* ===== STATS CONTAINER IMPROVEMENTS - ONE ROW ON MOBILE ===== */
-@media screen and (max-width: 600px) {
-  .stats-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 10px 0;
-  }
-  
-  .stats-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 0 10px;
-    min-width: min-content;
-  }
-  
-  .stats-item {
-    flex: 1;
-    min-width: 100px;
-    text-align: center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 8px;
-    box-shadow: 0 4px 10px rgba(0, 199, 255, 0.1);
-  }
-  
-  .stats-item h2 {
-    font-size: 1.8rem;
-    margin: 0;
-    color: var(--primary);
-    white-space: nowrap;
-  }
-  
-  .stats-item h3 {
-    font-size: 0.9rem;
-    margin: 5px 0 0;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-  
-  .plus-mid {
-    font-size: 0.7em;
-    position: relative;
-    top: -0.1em;
-  }
-}
-
-/* Even smaller phones */
-@media screen and (max-width: 375px) {
-  .stats-item {
-    min-width: 85px;
-    padding: 10px 5px;
-  }
-  
-  .stats-item h2 {
-    font-size: 1.5rem;
-  }
-  
-  .stats-item h3 {
-    font-size: 0.8rem;
-  }
-}
-
-/* Landscape mode */
-@media screen and (max-width: 900px) and (orientation: landscape) {
-  .stats-container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-}
