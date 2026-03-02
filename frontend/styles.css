@@ -1825,25 +1825,77 @@ input[type="file"] {
   }
   
   /* Stats section improvements */
+ /* ===== STATS CONTAINER - CENTERED COLUMN ON MOBILE ===== */
+@media screen and (max-width: 600px) {
+  .stats-wrapper {
+    width: 100%;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+  
   .stats-container {
-    gap: 20px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 0 10px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    width: 100% !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
   }
   
   .stats-item {
-    min-width: 120px;
-    flex: 1 1 auto;
+    width: 100% !important;
+    max-width: 250px !important;
+    text-align: center !important;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 15px 20px !important;
+    box-shadow: 0 4px 15px rgba(0, 199, 255, 0.15);
+    margin: 0 auto !important;
   }
   
   .stats-item h2 {
-    font-size: 2rem;
+    font-size: 2.2rem !important;
+    margin: 0 !important;
+    color: var(--primary);
   }
   
   .stats-item h3 {
-    font-size: 0.85rem;
+    font-size: 1.1rem !important;
+    margin: 8px 0 0 !important;
+    color: var(--muted);
+    font-weight: 500;
   }
+  
+  .plus-mid {
+    font-size: 0.6em;
+    position: relative;
+    top: -0.15em;
+  }
+}
+
+/* Even smaller phones */
+@media screen and (max-width: 375px) {
+  .stats-container {
+    max-width: 240px !important;
+  }
+  
+  .stats-item {
+    max-width: 220px !important;
+    padding: 12px 15px !important;
+  }
+  
+  .stats-item h2 {
+    font-size: 2rem !important;
+  }
+  
+  .stats-item h3 {
+    font-size: 1rem !important;
+  }
+}
   
   /* About page hero improvements */
   .about-page .hero-background {
@@ -2221,11 +2273,3 @@ input[type="file"] {
   }
 }
 
-/* ===== HIDE STATS SECTION ON MOBILE ===== */
-@media screen and (max-width: 600px) {
-  .about-page .stats-wrapper,
-  .about-page .stats-container,
-  .about-page .stats-item {
-    display: none !important;
-  }
-}
