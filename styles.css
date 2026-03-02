@@ -1846,7 +1846,7 @@ input[type="file"] {
     width: 100%;
     max-width: 200px;
     text-align: center;
-    background: rgba(27, 27, 27, 0.108);
+    background: rgba(0, 0, 0, 0.7); 
     border: none;
     border-radius: 16px;
     padding: 8px 0;
