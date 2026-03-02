@@ -1846,9 +1846,7 @@ input[type="file"] {
     width: 100%;
     max-width: 200px;
     text-align: center;
-    background: transparent; /* Remove dark background */
-    /* Or use very light background: */
-    /* background: rgba(255, 255, 255, 0.05); */
+    background: rgba(255, 255, 255, 0.03);
     border: none; /* Remove border */
     /* Or use very subtle border: */
     /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
