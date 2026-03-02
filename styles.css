@@ -2254,26 +2254,53 @@ input[type="file"] {
 }
 
 
-/* FEATURED PERSON CARD - Cyan theme */
-.card.featured-person {
-  grid-column: 1 / -1;
+/* ===== OYUKA FOUNDER SECTION - ISOLATED STYLES ===== */
+#founder-section {
+  width: 100%;
+  padding: 20px 0;
+}
+
+#founder-section h2 {
+  text-align: center;
+  font-size: 1.9rem;
+  margin-top: 36px;
+  margin-bottom: 30px;
+  color: var(--text, #e8eef7);
+}
+
+#founder-section .cards {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* Featured Person Card */
+#founder-section .card.featured-person {
   max-width: 500px;
   margin: 0 auto 2rem auto;
   background: #0f1218;
   border: 2px solid rgba(0, 188, 212, 0.3);
+  border-radius: 12px;
   padding: 3rem 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Image container */
-.card.featured-person .image-container {
+#founder-section .card.featured-person .image-container {
   position: relative;
   width: 200px;
   height: 200px;
   margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Image itself */
-.card.featured-person img {
+#founder-section .card.featured-person img {
   width: 180px;
   height: 180px;
   border-radius: 50%;
@@ -2282,10 +2309,11 @@ input[type="file"] {
   box-shadow: 0 0 30px rgba(0, 188, 212, 0.5);
   margin: 0;
   background: #1a2f38;
+  display: block;
 }
 
 /* Decorative rings */
-.card.featured-person .image-container::before {
+#founder-section .card.featured-person .image-container::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -2296,9 +2324,10 @@ input[type="file"] {
   border: 3px solid rgba(0, 188, 212, 0.6);
   border-radius: 50%;
   box-shadow: 0 0 20px #00bcd4;
+  pointer-events: none;
 }
 
-.card.featured-person .image-container::after {
+#founder-section .card.featured-person .image-container::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -2308,43 +2337,43 @@ input[type="file"] {
   height: 230px;
   border: 2px dotted rgba(0, 188, 212, 0.4);
   border-radius: 50%;
+  pointer-events: none;
 }
 
 /* Text content */
-.card.featured-person .card-content {
+#founder-section .card.featured-person .card-content {
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: 60px 60px 30px 30px;
   border: 1px solid rgba(0, 188, 212, 0.3);
   width: 100%;
+  text-align: center;
 }
 
-.card.featured-person .card-content h3 {
+#founder-section .card.featured-person .card-content h3 {
   color: #00bcd4;
   font-size: 2.2rem;
   text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: bold;
 }
 
-.card.featured-person .card-content p {
+#founder-section .card.featured-person .card-content p {
   color: #ffffff;
   background: rgba(0, 188, 212, 0.15);
   border: 1px solid rgba(0, 188, 212, 0.4);
   font-size: 1.2rem;
   padding: 0.8rem 1.5rem;
-}
-
-.card.featured-person .card-content p::before {
-  color: #00bcd4;
-  content: '\f0c0';  /* User group icon */
-  font-family: 'Font Awesome 6 Free';
-  font-weight: 400;
-  margin-right: 8px;
+  border-radius: 30px;
+  display: inline-block;
+  margin: 0.5rem 0;
+  line-height: 1.6;
 }
 
 /* Founder label */
-.card.featured-person .founder-label {
+#founder-section .card.featured-person .founder-label {
   display: inline-block;
   background: #00bcd4;
   color: #0f1218;
@@ -2356,4 +2385,45 @@ input[type="file"] {
   margin-top: 1rem;
   text-transform: uppercase;
   box-shadow: 0 0 20px #00bcd4;
+}
+
+/* Responsive styles for mobile */
+@media screen and (max-width: 600px) {
+  #founder-section .card.featured-person {
+    padding: 2rem 1rem;
+    margin: 0 15px 2rem 15px;
+  }
+  
+  #founder-section .card.featured-person .image-container {
+    width: 150px;
+    height: 150px;
+  }
+  
+  #founder-section .card.featured-person img {
+    width: 130px;
+    height: 130px;
+  }
+  
+  #founder-section .card.featured-person .image-container::before {
+    width: 160px;
+    height: 160px;
+  }
+  
+  #founder-section .card.featured-person .image-container::after {
+    width: 180px;
+    height: 180px;
+  }
+  
+  #founder-section .card.featured-person .card-content {
+    padding: 1.5rem;
+  }
+  
+  #founder-section .card.featured-person .card-content h3 {
+    font-size: 1.8rem;
+  }
+  
+  #founder-section .card.featured-person .card-content p {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+  }
 }
