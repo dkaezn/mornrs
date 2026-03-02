@@ -1847,12 +1847,10 @@ input[type="file"] {
     max-width: 200px;
     text-align: center;
     background: rgba(255, 255, 255, 0.03);
-    border: none; /* Remove border */
-    /* Or use very subtle border: */
-    /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
+    border-bottom:  1px solid rgba(255, 255, 255, 0.3); 
     border-radius: 0;
     padding: 8px 0;
-    box-shadow: none; /* Remove shadow */
+    box-shadow: none; 
     margin: 0 auto;
   }
   
