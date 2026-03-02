@@ -1835,37 +1835,37 @@ input[type="file"] {
   }
   
   .stats-container {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 15px !important;
-    width: 100% !important;
-    max-width: 280px !important;
-    margin: 0 auto !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto !;
   }
   
   .stats-item {
-    width: 100% !important;
-    max-width: 250px !important;
-    text-align: center !important;
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 15px 20px !important;
+    padding: 15px 20px;
     box-shadow: 0 4px 15px rgba(0, 199, 255, 0.15);
-    margin: 0 auto !important;
+    margin: 0 auto;
   }
   
   .stats-item h2 {
-    font-size: 2.2rem !important;
-    margin: 0 !important;
+    font-size: 2.2rem;
+    margin: 0;
     color: var(--primary);
   }
   
   .stats-item h3 {
-    font-size: 1.1rem !important;
-    margin: 8px 0 0 !important;
+    font-size: 1.1rem;
+    margin: 8px 0 0;
     color: var(--muted);
     font-weight: 500;
   }
@@ -1877,25 +1877,7 @@ input[type="file"] {
   }
 }
 
-/* Even smaller phones */
-@media screen and (max-width: 375px) {
-  .stats-container {
-    max-width: 240px !important;
-  }
-  
-  .stats-item {
-    max-width: 220px !important;
-    padding: 12px 15px !important;
-  }
-  
-  .stats-item h2 {
-    font-size: 2rem !important;
-  }
-  
-  .stats-item h3 {
-    font-size: 1rem !important;
-  }
-}
+/* 
   
   /* About page hero improvements */
   .about-page .hero-background {
