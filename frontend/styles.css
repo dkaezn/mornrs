@@ -1826,7 +1826,7 @@ input[type="file"] {
   
   /* Stats section improvements */
  /* ===== STATS CONTAINER - CENTERED COLUMN ON MOBILE ===== */
-@media screen and (max-width: 600px) {
+
   .stats-wrapper {
     width: 100%;
     padding: 20px 0;
@@ -2174,7 +2174,7 @@ input[type="file"] {
   .btn-primary:active {
     transform: scale(0.98);
   }
-}
+
 
 /* Small phones (375px and down) */
 @media screen and (max-width: 375px) {
