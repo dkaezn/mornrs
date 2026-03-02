@@ -1846,9 +1846,9 @@ input[type="file"] {
     width: 100%;
     max-width: 200px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom:  1px solid rgba(255, 255, 255, 0.3); 
-    border-radius: 0;
+    background: rgba(135, 60, 60, 0.108);
+    border:  1px solid rgba(255, 255, 255, 0.3); 
+    border-radius: 16px;
     padding: 8px 0;
     box-shadow: none; 
     margin: 0 auto;
