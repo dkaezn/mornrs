@@ -2297,40 +2297,48 @@ input[type="file"] {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  width: 180px !important;
-  height: 180px !important;
+  width: 200px !important;
+  height: 200px !important;
   flex-shrink: 0 !important;
 }
 
-/* Image itself */
-/* Image itself - FORCED TO BE ROUND */
-.oyuka-image-container img {
-  all: initial !important;
-  display: block !important;
+/* Image wrapper - this ensures circular crop */
+.oyuka-image-wrapper {
   width: 180px !important;
   height: 180px !important;
   border-radius: 50% !important;
-  object-fit: cover !important; /* This crops the image to fill the circle */
-  object-position: center !important; /* Centers the image within the circle */
+  overflow: hidden !important; /* This crops the image to the circle */
   border: 4px solid #00bcd4 !important;
   box-shadow: 0 0 30px rgba(0, 188, 212, 0.5) !important;
   background: #1a2f38 !important;
-  aspect-ratio: 1/1 !important;
+  position: relative !important;
+  z-index: 2 !important;
 }
 
-/* Decorative rings - adjusted for smaller size */
+/* Image itself */
+.oyuka-image-wrapper img {
+  all: initial !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* Decorative rings - adjusted to wrap around the wrapper */
 .oyuka-image-container::before {
   content: '' !important;
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 190px !important;
-  height: 190px !important;
+  width: 210px !important;
+  height: 210px !important;
   border: 3px solid rgba(0, 188, 212, 0.6) !important;
   border-radius: 50% !important;
   box-shadow: 0 0 20px #00bcd4 !important;
   pointer-events: none !important;
+  z-index: 1 !important;
 }
 
 .oyuka-image-container::after {
@@ -2339,11 +2347,12 @@ input[type="file"] {
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 210px !important;
-  height: 210px !important;
+  width: 230px !important;
+  height: 230px !important;
   border: 2px dotted rgba(0, 188, 212, 0.4) !important;
   border-radius: 50% !important;
   pointer-events: none !important;
+  z-index: 1 !important;
 }
 
 /* Text content - now next to image */
