@@ -2220,48 +2220,48 @@ input[type="file"] {
     background: rgba(21, 26, 35, 0.98);
   }
 }
-/* ===== STATS CONTAINER IMPROVEMENTS - ONE ROW ON MOBILE ===== */
+/* ===== STATS CONTAINER - FORCE ONE ROW ON MOBILE ===== */
 @media screen and (max-width: 600px) {
   .stats-wrapper {
     width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     padding: 10px 0;
+    overflow: visible;
   }
   
   .stats-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 0 10px;
-    min-width: min-content;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 0 15px !important;
   }
   
   .stats-item {
-    flex: 1;
-    min-width: 100px;
-    text-align: center;
+    flex: 0 1 auto !important;
+    min-width: 90px !important;
+    max-width: 120px !important;
+    text-align: center !important;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 12px 8px;
+    padding: 12px 8px !important;
     box-shadow: 0 4px 10px rgba(0, 199, 255, 0.1);
   }
   
   .stats-item h2 {
-    font-size: 1.8rem;
-    margin: 0;
+    font-size: 1.8rem !important;
+    margin: 0 !important;
     color: var(--primary);
-    white-space: nowrap;
+    white-space: nowrap !important;
   }
   
   .stats-item h3 {
-    font-size: 0.9rem;
-    margin: 5px 0 0;
+    font-size: 0.9rem !important;
+    margin: 5px 0 0 !important;
     color: var(--muted);
-    white-space: nowrap;
+    white-space: nowrap !important;
   }
   
   .plus-mid {
@@ -2271,26 +2271,24 @@ input[type="file"] {
   }
 }
 
-/* Even smaller phones */
+/* For very small phones */
 @media screen and (max-width: 375px) {
   .stats-item {
-    min-width: 85px;
-    padding: 10px 5px;
+    min-width: 80px !important;
+    padding: 10px 5px !important;
   }
   
   .stats-item h2 {
-    font-size: 1.5rem;
+    font-size: 1.5rem !important;
   }
   
   .stats-item h3 {
-    font-size: 0.8rem;
+    font-size: 0.8rem !important;
   }
 }
 
-/* Landscape mode */
-@media screen and (max-width: 900px) and (orientation: landscape) {
-  .stats-container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
+/* Override any existing stats styles that might conflict */
+.stats-container {
+  display: flex !important;
+  flex-direction: row !important;
 }
