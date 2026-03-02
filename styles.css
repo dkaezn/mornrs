@@ -2253,3 +2253,107 @@ input[type="file"] {
   }
 }
 
+
+/* FEATURED PERSON CARD - Cyan theme */
+.card.featured-person {
+  grid-column: 1 / -1;
+  max-width: 500px;
+  margin: 0 auto 2rem auto;
+  background: #0f1218;
+  border: 2px solid rgba(0, 188, 212, 0.3);
+  padding: 3rem 2rem;
+}
+
+/* Image container */
+.card.featured-person .image-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin-bottom: 2rem;
+}
+
+/* Image itself */
+.card.featured-person img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #00bcd4;
+  box-shadow: 0 0 30px rgba(0, 188, 212, 0.5);
+  margin: 0;
+  background: #1a2f38;
+}
+
+/* Decorative rings */
+.card.featured-person .image-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 210px;
+  height: 210px;
+  border: 3px solid rgba(0, 188, 212, 0.6);
+  border-radius: 50%;
+  box-shadow: 0 0 20px #00bcd4;
+}
+
+.card.featured-person .image-container::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 230px;
+  height: 230px;
+  border: 2px dotted rgba(0, 188, 212, 0.4);
+  border-radius: 50%;
+}
+
+/* Text content */
+.card.featured-person .card-content {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 60px 60px 30px 30px;
+  border: 1px solid rgba(0, 188, 212, 0.3);
+  width: 100%;
+}
+
+.card.featured-person .card-content h3 {
+  color: #00bcd4;
+  font-size: 2.2rem;
+  text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+  margin-bottom: 0.5rem;
+}
+
+.card.featured-person .card-content p {
+  color: #ffffff;
+  background: rgba(0, 188, 212, 0.15);
+  border: 1px solid rgba(0, 188, 212, 0.4);
+  font-size: 1.2rem;
+  padding: 0.8rem 1.5rem;
+}
+
+.card.featured-person .card-content p::before {
+  color: #00bcd4;
+  content: '\f0c0';  /* User group icon */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 400;
+  margin-right: 8px;
+}
+
+/* Founder label */
+.card.featured-person .founder-label {
+  display: inline-block;
+  background: #00bcd4;
+  color: #0f1218;
+  padding: 0.3rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  box-shadow: 0 0 20px #00bcd4;
+}
