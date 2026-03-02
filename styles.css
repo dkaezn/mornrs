@@ -2252,10 +2252,7 @@ input[type="file"] {
     background: rgba(21, 26, 35, 0.98);
   }
 }
-
-
-
-/* ===== OYUKA SECTION - COMPLETELY ISOLATED ===== */
+/* ===== OYUKA SECTION - ROW LAYOUT ===== */
 .oyuka-founder-section {
   all: initial !important;
   display: block !important;
@@ -2278,18 +2275,19 @@ input[type="file"] {
   padding: 0 !important;
 }
 
-/* Featured Person Card */
+/* Featured Person Card - NOW ROW LAYOUT */
 .oyuka-founder-card {
   all: initial !important;
   display: flex !important;
-  flex-direction: column !important;
+  flex-direction: row !important;
   align-items: center !important;
-  max-width: 500px !important;
+  gap: 2rem !important;
+  max-width: 700px !important;
   margin: 0 auto 2rem auto !important;
   background: #0f1218 !important;
   border: 2px solid rgba(0, 188, 212, 0.3) !important;
-  border-radius: 12px !important;
-  padding: 3rem 2rem !important;
+  border-radius: 100px 20px 20px 100px !important;
+  padding: 1.5rem !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
 }
 
@@ -2300,17 +2298,17 @@ input[type="file"] {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  width: 200px !important;
-  height: 200px !important;
-  margin-bottom: 2rem !important;
+  width: 180px !important;
+  height: 180px !important;
+  flex-shrink: 0 !important;
 }
 
 /* Image itself */
 .oyuka-image-container img {
   all: initial !important;
   display: block !important;
-  width: 180px !important;
-  height: 180px !important;
+  width: 160px !important;
+  height: 160px !important;
   border-radius: 50% !important;
   object-fit: cover !important;
   border: 4px solid #00bcd4 !important;
@@ -2318,15 +2316,15 @@ input[type="file"] {
   background: #1a2f38 !important;
 }
 
-/* Decorative rings */
+/* Decorative rings - adjusted for smaller size */
 .oyuka-image-container::before {
   content: '' !important;
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 210px !important;
-  height: 210px !important;
+  width: 190px !important;
+  height: 190px !important;
   border: 3px solid rgba(0, 188, 212, 0.6) !important;
   border-radius: 50% !important;
   box-shadow: 0 0 20px #00bcd4 !important;
@@ -2339,35 +2337,38 @@ input[type="file"] {
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 230px !important;
-  height: 230px !important;
+  width: 210px !important;
+  height: 210px !important;
   border: 2px dotted rgba(0, 188, 212, 0.4) !important;
   border-radius: 50% !important;
   pointer-events: none !important;
 }
 
-/* Text content */
+/* Text content - now next to image */
 .oyuka-card-content {
   all: initial !important;
-  display: block !important;
-  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  text-align: left !important;
   background: rgba(0, 0, 0, 0.3) !important;
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
-  padding: 2rem !important;
-  border-radius: 60px 60px 30px 30px !important;
+  padding: 1.5rem 2rem !important;
+  border-radius: 30px 60px 60px 30px !important;
   border: 1px solid rgba(0, 188, 212, 0.3) !important;
-  width: 100% !important;
+  flex: 1 !important;
 }
 
 .oyuka-name {
   all: initial !important;
   display: block !important;
   color: #00bcd4 !important;
-  font-size: 2.2rem !important;
+  font-size: 2.5rem !important;
   font-weight: bold !important;
   text-shadow: 0 0 15px rgba(0, 188, 212, 0.5) !important;
-  margin: 0 0 1.5rem 0 !important;
+  margin: 0 0 1rem 0 !important;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif !important;
 }
 
@@ -2377,21 +2378,24 @@ input[type="file"] {
   display: inline-block !important;
   background: #00bcd4 !important;
   color: #0f1218 !important;
-  padding: 0.3rem 1.5rem !important;
+  padding: 0.5rem 2rem !important;
   border-radius: 30px !important;
   font-weight: 700 !important;
-  font-size: 0.9rem !important;
+  font-size: 1rem !important;
   letter-spacing: 2px !important;
   text-transform: uppercase !important;
   box-shadow: 0 0 20px #00bcd4 !important;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif !important;
 }
 
-/* Responsive styles for mobile */
+/* Responsive styles for mobile - stack on small screens */
 @media screen and (max-width: 600px) {
   .oyuka-founder-card {
-    padding: 2rem 1rem !important;
+    flex-direction: column !important;
+    border-radius: 50px 50px 30px 30px !important;
+    padding: 2rem 1.5rem !important;
     margin: 0 15px 2rem 15px !important;
+    gap: 1.5rem !important;
   }
   
   .oyuka-image-container {
@@ -2415,11 +2419,15 @@ input[type="file"] {
   }
   
   .oyuka-card-content {
+    align-items: center !important;
+    text-align: center !important;
     padding: 1.5rem !important;
+    border-radius: 30px !important;
+    width: 100% !important;
   }
   
   .oyuka-name {
-    font-size: 1.8rem !important;
-    margin: 0 0 1rem 0 !important;
+    font-size: 2rem !important;
+    text-align: center !important;
   }
 }
